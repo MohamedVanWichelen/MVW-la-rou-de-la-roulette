@@ -33,15 +33,15 @@ let spinning = false;
 // ====== Physics ======
 let angularVelocity = 0;  // radians per frame
 let angularAcceleration = 0;
-let friction = 0.985;     // friction coefficient - lighter for more turns
-let minVelocity = 0.001;  // minimum velocity before stopping
-let maxVelocity = 0.6;    // maximum velocity - even faster for more excitement
-let spinForce = 0.06;     // initial spin force - much higher for multiple turns
+let friction = 0.982;     // friction coefficient - plus naturel
+let minVelocity = 0.0008; // minimum velocity before stopping - plus basse
+let maxVelocity = 0.8;    // maximum velocity - plus haute pour plus d'excitation
+let spinForce = 0.08;     // initial spin force - plus forte pour démarrage naturel
 let targetSegment = -1;   // target segment index
 let isDecelerating = false;
 let decelerationPhase = false; // Track deceleration phase
-let minTurns = 6;         // Minimum number of full turns
-let maxTurns = 10;        // Maximum number of full turns
+let minTurns = 4;         // Minimum number of full turns - plus réaliste
+let maxTurns = 8;         // Maximum number of full turns - plus réaliste
 
 // ====== Responsive canvas ======
 function resizeCanvas(){
@@ -188,13 +188,26 @@ function draw(){
     ctx.shadowOffsetY = 1;
     
     ctx.fillStyle = getContrastColor(baseColor);
-    // Adjust font size for mobile
+    // Adjust font size based on number of segments and mobile
     const isMobile = window.innerWidth <= 768;
-    const baseFontSize = isMobile ? Math.max(14, Math.min(22, r*0.11)) : Math.max(13, Math.min(20, r*0.09));
+    const segmentCount = segs.length;
+    let baseFontSize;
+    
+    if (segmentCount >= 8) {
+      // Smaller font for 8 segments
+      baseFontSize = isMobile ? Math.max(10, Math.min(14, r*0.08)) : Math.max(9, Math.min(12, r*0.07));
+    } else if (segmentCount >= 6) {
+      // Medium font for 6-7 segments
+      baseFontSize = isMobile ? Math.max(12, Math.min(16, r*0.09)) : Math.max(11, Math.min(15, r*0.08));
+    } else {
+      // Normal font for 2-5 segments
+      baseFontSize = isMobile ? Math.max(14, Math.min(22, r*0.11)) : Math.max(13, Math.min(20, r*0.09));
+    }
+    
     ctx.font = `600 ${baseFontSize}px -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif`;
     const text = segs[i];
-    const maxWidth = isMobile ? 160 : 140; // Wider text area on mobile
-    wrapText(ctx, text, r - 20, 0, baseFontSize, maxWidth);
+    const maxWidth = segmentCount >= 8 ? (isMobile ? 100 : 90) : (isMobile ? 160 : 140);
+    wrapText(ctx, text, r - 25, 0, baseFontSize, maxWidth);
     
     ctx.shadowColor = 'transparent';
     ctx.restore();
@@ -289,6 +302,17 @@ function updateChoices(){
   console.log('final choices:', choices);
   
   resultEl.textContent = '';
+  
+  // Update layout for 6+ choices
+  if (choices.length >= 6) {
+    choicesList.classList.add('two-columns');
+  } else {
+    choicesList.classList.remove('two-columns');
+  }
+  
+  // Reset rotation to prevent cumulative issues
+  rotation = 0;
+  
   draw();
   
   // Enable spin button if we have valid choices
@@ -400,6 +424,9 @@ function spin(){
   decelerationPhase = false;
   targetSegment = -1; // No predetermined target
   
+  // Normalize current rotation to prevent accumulation
+  rotation = rotation % (Math.PI * 2);
+  
   // Apply very strong initial spin force for multiple turns
   const baseForce = spinForce;
   const randomVariation = Math.random() * spinForce * 0.4; // 0 to 40% variation
@@ -430,13 +457,14 @@ function physicsLoop(){
   const totalRotation = Math.abs(rotation);
   const totalTurns = totalRotation / (Math.PI * 2);
   
-  // Apply progressive deceleration based on turns completed
+  // Apply natural progressive deceleration based on turns completed
   if(!decelerationPhase) {
-    // Fast phase - maintain speed for multiple turns
+    // Fast phase - maintain speed for multiple turns with natural variation
     if(totalTurns < minTurns) {
-      // Keep high speed for minimum turns
-      angularVelocity *= 0.998; // Very light friction
-    } else if(totalTurns < minTurns + 2) {
+      // Keep high speed for minimum turns with slight natural variation
+      const naturalVariation = 0.998 + (Math.random() * 0.004 - 0.002);
+      angularVelocity *= naturalVariation;
+    } else if(totalTurns < minTurns + 1.5) {
       // Start slowing down after minimum turns
       angularVelocity *= 0.992; // Light friction
     } else {
@@ -445,8 +473,9 @@ function physicsLoop(){
       console.log('Switching to deceleration phase after', totalTurns.toFixed(1), 'turns');
     }
   } else {
-    // Slow phase - more aggressive deceleration for final stop
-    angularVelocity *= friction; // Normal friction for gradual stop
+    // Slow phase - natural deceleration for final stop
+    const naturalFriction = friction + (Math.random() * 0.003 - 0.0015);
+    angularVelocity *= naturalFriction;
   }
   
   // Update rotation
@@ -556,8 +585,11 @@ function trackResult(segmentIndex){
 function finalizeResult(selectedSegment){
   const segs = getSegments();
   const winner = segs[selectedSegment];
-  resultEl.textContent = `Le choix gagnant est : ${winner}`;
+  resultEl.textContent = `🎯 Le choix gagnant est : ${winner}`;
   celebrate();
+  
+  // Highlight the pointer to show result
+  highlightPointer();
   
   // Haptic feedback
   if(navigator.vibrate) {
@@ -566,6 +598,16 @@ function finalizeResult(selectedSegment){
   
   // Sound effect (optional - will add if supported)
   playSpinCompleteSound();
+}
+
+function highlightPointer() {
+  const pointer = document.querySelector('.pointer svg');
+  if (pointer) {
+    pointer.style.animation = 'pointerHighlight 1s ease-in-out 3';
+    setTimeout(() => {
+      pointer.style.animation = 'pointerPulse 2s ease-in-out infinite';
+    }, 3000);
+  }
 }
 
 function playSpinCompleteSound(){

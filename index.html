@@ -16,23 +16,33 @@
 
       <div class="content">
         <div class="canvas-wrap">
-          <!-- Flèche fixe en haut -->
-          <div class="pointer" aria-hidden="true">
-            <svg width="50" height="50" viewBox="0 0 50 50" aria-hidden="true">
+          <!-- Flèche fixe en haut avec design iOS 26 -->
+          <div class="pointer-container">
+            <svg width="60" height="60" viewBox="0 0 60 60" class="pointer" aria-hidden="true">
               <defs>
                 <filter id="pointerShadow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.3)"/>
+                  <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(0,0,0,0.4)"/>
                 </filter>
                 <linearGradient id="pointerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" style="stop-color:#6C82A0;stop-opacity:1" />
-                  <stop offset="50%" style="stop-color:#38536C;stop-opacity:1" />
-                  <stop offset="100%" style="stop-color:#152238;stop-opacity:1" />
+                  <stop offset="0%" style="stop-color:#007AFF;stop-opacity:1" />
+                  <stop offset="50%" style="stop-color:#0056CC;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#003D99;stop-opacity:1" />
+                </linearGradient>
+                <linearGradient id="pointerAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.8" />
+                  <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0.2" />
                 </linearGradient>
               </defs>
-              <polygon points="25,5 40,25 35,30 25,15 15,30 10,25" fill="url(#pointerGradient)" stroke="rgba(0,0,0,0.2)" stroke-width="1" filter="url(#pointerShadow)"/>
-              <!-- Base de la flèche -->
-              <circle cx="25" cy="35" r="8" fill="url(#pointerGradient)" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+              <!-- Main arrow body -->
+              <polygon points="30,8 48,30 42,36 30,20 18,36 12,30" fill="url(#pointerGradient)" stroke="rgba(255,255,255,0.3)" stroke-width="1" filter="url(#pointerShadow)"/>
+              <!-- Accent highlight -->
+              <polygon points="30,10 44,30 40,34 30,18 20,34 16,30" fill="url(#pointerAccent)" opacity="0.6"/>
+              <!-- Base circle -->
+              <circle cx="30" cy="42" r="10" fill="url(#pointerGradient)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+              <!-- Inner highlight -->
+              <circle cx="30" cy="42" r="6" fill="url(#pointerAccent)" opacity="0.4"/>
             </svg>
+            <div class="pointer-glow"></div>
           </div>
           <canvas id="wheel" aria-label="Roue de décision" role="img"></canvas>
         </div>
