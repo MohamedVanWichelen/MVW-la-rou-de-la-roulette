@@ -1,49 +1,91 @@
 :root{
-    /* Custom color palette */
+    /* iOS 26 Liquid Glass Color System */
     --c-night: #0B0F19;     /* Bleu nuit */
     --c-navy: #152238;      /* Bleu marine */
     --c-steel: #38536C;     /* Bleu acier */
     --c-bluegray: #6C82A0;  /* Bleu gris */
     --c-cream: #EFEBD9;     /* Crème clair */
     
-    /* Primary colors for UI elements */
-    --c-primary: var(--c-steel);      /* Bleu acier pour les boutons principaux */
-    --c-primary-hover: var(--c-navy); /* Bleu marine pour hover */
-    --c-secondary: var(--c-bluegray); /* Bleu gris pour les boutons secondaires */
-    --c-accent: var(--c-night);       /* Bleu nuit pour les accents */
+    /* iOS 26 System Colors - Light Mode */
+    --c-primary: #007AFF;           /* iOS Blue */
+    --c-primary-hover: #0056CC;     /* iOS Blue Darker */
+    --c-secondary: #5856D6;         /* iOS Purple */
+    --c-accent: #FF3B30;            /* iOS Red */
+    --c-success: #34C759;           /* iOS Green */
+    --c-warning: #FF9500;           /* iOS Orange */
     
-    /* Text colors */
-    --c-label: var(--c-night);           /* Primary text - bleu nuit */
-    --c-secondary-label: var(--c-navy);  /* Secondary text - bleu marine */
-    --c-tertiary-label: var(--c-steel);  /* Tertiary text - bleu acier */
-    --c-quaternary-label: var(--c-bluegray); /* Quaternary text - bleu gris */
+    /* iOS 26 Text Colors - Light Mode */
+    --c-label: #000000;
+    --c-secondary-label: rgba(60, 60, 67, 0.6);
+    --c-tertiary-label: rgba(60, 60, 67, 0.3);
+    --c-quaternary-label: rgba(60, 60, 67, 0.18);
     
-    /* Background colors */
-    --c-system-background: #FFFFFF;      /* White for cards */
-    --c-secondary-background: var(--c-cream); /* Crème clair pour les fonds */
-    --c-tertiary-background: #FFFFFF;    /* White for inputs */
+    /* iOS 26 Background Colors - Light Mode */
+    --c-system-background: #FFFFFF;
+    --c-secondary-background: #F2F2F7;
+    --c-tertiary-background: #FFFFFF;
+    --c-grouped-background: #F2F2F7;
+    --c-secondary-grouped-background: #FFFFFF;
     
-    /* Fill colors */
-    --c-system-fill: rgba(108, 130, 160, 0.1);    /* Bleu gris transparent */
-    --c-secondary-fill: rgba(56, 83, 108, 0.15);  /* Bleu acier transparent */
-    --c-tertiary-fill: rgba(21, 34, 56, 0.1);     /* Bleu marine transparent */
-    --c-quaternary-fill: rgba(11, 15, 25, 0.05);  /* Bleu nuit transparent */
+    /* iOS 26 Fill Colors - Light Mode */
+    --c-system-fill: rgba(120, 120, 128, 0.2);
+    --c-secondary-fill: rgba(120, 120, 128, 0.16);
+    --c-tertiary-fill: rgba(118, 118, 128, 0.12);
+    --c-quaternary-fill: rgba(116, 116, 128, 0.08);
     
-    /* Dark mode colors (inverted palette) */
-    --c-dark-label: var(--c-cream);
-    --c-dark-secondary-label: #F5F5F5;
-    --c-dark-tertiary-label: rgba(245, 245, 245, 0.8);
-    --c-dark-quaternary-label: rgba(245, 245, 245, 0.6);
-    --c-dark-system-background: var(--c-night);
-    --c-dark-secondary-background: var(--c-navy);
-    --c-dark-tertiary-background: var(--c-steel);
-    --c-dark-system-fill: rgba(239, 235, 217, 0.1);
-    --c-dark-secondary-fill: rgba(239, 235, 217, 0.15);
-    --c-dark-tertiary-fill: rgba(239, 235, 217, 0.1);
-    --c-dark-quaternary-fill: rgba(239, 235, 217, 0.05);
+    /* iOS 26 Separator Colors */
+    --c-separator: rgba(60, 60, 67, 0.29);
+    --c-opaque-separator: #C6C6C8;
     
-    --radius: 12px; /* Standard corner radius */
-    --radius-large: 20px; /* For cards and larger elements */
+    /* iOS 26 Dark Mode Colors */
+    --c-dark-label: #FFFFFF;
+    --c-dark-secondary-label: rgba(235, 235, 245, 0.6);
+    --c-dark-tertiary-label: rgba(235, 235, 245, 0.3);
+    --c-dark-quaternary-label: rgba(235, 235, 245, 0.18);
+    --c-dark-system-background: #000000;
+    --c-dark-secondary-background: #1C1C1E;
+    --c-dark-tertiary-background: #2C2C2E;
+    --c-dark-grouped-background: #000000;
+    --c-dark-secondary-grouped-background: #1C1C1E;
+    --c-dark-system-fill: rgba(120, 120, 128, 0.36);
+    --c-dark-secondary-fill: rgba(120, 120, 128, 0.32);
+    --c-dark-tertiary-fill: rgba(118, 118, 128, 0.24);
+    --c-dark-quaternary-fill: rgba(116, 116, 128, 0.18);
+    --c-dark-separator: rgba(84, 84, 88, 0.6);
+    --c-dark-opaque-separator: #38383A;
+    
+    /* iOS 26 Liquid Glass Effects */
+    --c-glass-bg: rgba(255, 255, 255, 0.25);
+    --c-glass-border: rgba(255, 255, 255, 0.18);
+    --c-dark-glass-bg: rgba(0, 0, 0, 0.25);
+    --c-dark-glass-border: rgba(255, 255, 255, 0.1);
+    
+    /* iOS 26 Radius System */
+    --radius: 16px;          /* Standard iOS radius */
+    --radius-large: 24px;    /* Large iOS radius */
+    --radius-small: 8px;     /* Small iOS radius */
+    --radius-extra-large: 32px; /* Extra large for special elements */
+    
+    /* iOS 26 Spacing System */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-xxl: 48px;
+    
+    /* iOS 26 Typography */
+    --font-size-large-title: 34px;
+    --font-size-title-1: 28px;
+    --font-size-title-2: 22px;
+ --font-size-title-3: 20px;
+    --font-size-headline: 17px;
+    --font-size-body: 17px;
+    --font-size-callout: 16px;
+    --font-size-subheadline: 15px;
+    --font-size-footnote: 13px;
+    --font-size-caption-1: 12px;
+    --font-size-caption-2: 11px;
   }
   
   *{box-sizing:border-box}
@@ -61,16 +103,36 @@
     letter-spacing: -0.022em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-size: var(--font-size-body);
   }
   .app{width:min(920px, 100%); padding:20px;}
   .card{
-    background: var(--c-system-background);
-    border-radius: var(--radius-large);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-    border: 0.5px solid rgba(0, 0, 0, 0.04);
+    background: var(--c-glass-bg);
+    border-radius: var(--radius-extra-large);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.12),
+      0 2px 8px rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--c-glass-border);
     overflow: hidden;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    position: relative;
+  }
+  
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.1) 0%, 
+      rgba(255, 255, 255, 0.05) 50%, 
+      rgba(255, 255, 255, 0.02) 100%);
+    pointer-events: none;
+    border-radius: inherit;
   }
   .header{
     padding: 24px 24px 16px; 
@@ -441,6 +503,12 @@
     gap: 12px;
     flex-wrap: wrap;
     margin-top: 16px;
+    justify-content: center;
+  }
+  
+  .btn-row .btn {
+    flex: 1;
+    max-width: 200px;
   }
   
   @media (max-width: 768px) {

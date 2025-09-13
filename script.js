@@ -23,7 +23,7 @@ function getCurrentPalette() {
 }
 
 // ====== DOM ======
-let canvas, ctx, updateBtn, spinBtn, sampleBtn, resultEl, modeBtn, addChoiceBtn, choicesList;
+let canvas, ctx, spinBtn, resultEl, modeBtn, addChoiceBtn, choicesList;
 
 // ====== State ======
 let choices = ["Oui","Non","Plus tard","Demander un avis"];
@@ -722,9 +722,7 @@ function initApp() {
   // Get DOM elements
   canvas = document.getElementById('wheel');
   ctx = canvas.getContext('2d');
-  updateBtn = document.getElementById('updateBtn');
   spinBtn = document.getElementById('spinBtn');
-  sampleBtn = document.getElementById('sampleBtn');
   resultEl = document.getElementById('result');
   modeBtn = document.getElementById('modeBtn');
   addChoiceBtn = document.getElementById('addChoiceBtn');
@@ -734,17 +732,6 @@ function initApp() {
   initializeChoices();
 
   // Attach event listeners
-  updateBtn.addEventListener('click', updateChoices);
-  sampleBtn.addEventListener('click', () => {
-    // Pre-fill with sample choices
-    const sampleChoices = ["Pizza", "Sushi", "Tacos", "Burger", "Pasta", "Salade"];
-    choicesList.innerHTML = '';
-    sampleChoices.forEach((choice, index) => {
-      const choiceItem = createChoiceItem(choice, `Choix ${index + 1}`);
-      choicesList.appendChild(choiceItem);
-    });
-    updateChoices();
-  });
   spinBtn.addEventListener('click', spin);
   modeBtn.addEventListener('click', toggleMode);
   addChoiceBtn.addEventListener('click', addNewChoice);
