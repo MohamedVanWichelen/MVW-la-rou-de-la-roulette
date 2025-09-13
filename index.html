@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MVW | la rou de la roulette</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app" role="application" aria-label="Decision Roulette">
+    <div class="card">
+      <div class="header">
+        <div class="title">🎯 Decision Roulette</div>
+        <button class="mode-toggle" id="modeBtn" aria-label="Basculer mode clair/sombre">Mode</button>
+      </div>
+
+      <div class="content">
+        <div class="canvas-wrap">
+          <!-- Flèche fixe en haut -->
+          <div class="pointer" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+              <polygon points="20,2 30,18 10,18" fill="#FFD166" stroke="rgba(0,0,0,.2)" stroke-width="1"/>
+            </svg>
+          </div>
+          <canvas id="wheel" aria-label="Roue de décision" role="img"></canvas>
+        </div>
+
+        <div class="controls">
+          <div class="field" aria-label="Entrer les choix, séparés par des virgules">
+            <textarea id="choicesInput" placeholder="Tape tes choix, séparés par des virgules (ex: Pizza, Sushi, Tacos)"></textarea>
+          </div>
+          <div class="hint">2 à 8 choix. Probabilités égales. La roue s’adapte automatiquement.</div>
+
+          <div class="btn-row">
+            <button class="btn btn-secondary" id="sampleBtn">Pré-remplir</button>
+            <button class="btn btn-ghost" id="updateBtn">Mettre à jour la roue</button>
+            <button class="btn btn-primary" id="spinBtn">SPIN</button>
+          </div>
+
+          <div id="result" class="result" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script defer src="app.js"></script>
+</body>
+</html>
