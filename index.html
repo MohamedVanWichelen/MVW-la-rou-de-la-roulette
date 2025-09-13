@@ -18,18 +18,41 @@
         <div class="canvas-wrap">
           <!-- Flèche fixe en haut -->
           <div class="pointer" aria-hidden="true">
-            <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
-              <polygon points="20,2 30,18 10,18" fill="#FFD166" stroke="rgba(0,0,0,.2)" stroke-width="1"/>
+            <svg width="50" height="50" viewBox="0 0 50 50" aria-hidden="true">
+              <defs>
+                <filter id="pointerShadow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.3)"/>
+                </filter>
+                <linearGradient id="pointerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#6C82A0;stop-opacity:1" />
+                  <stop offset="50%" style="stop-color:#38536C;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#152238;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+              <polygon points="25,5 40,25 35,30 25,15 15,30 10,25" fill="url(#pointerGradient)" stroke="rgba(0,0,0,0.2)" stroke-width="1" filter="url(#pointerShadow)"/>
+              <!-- Base de la flèche -->
+              <circle cx="25" cy="35" r="8" fill="url(#pointerGradient)" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
             </svg>
           </div>
           <canvas id="wheel" aria-label="Roue de décision" role="img"></canvas>
         </div>
 
         <div class="controls">
-          <div class="field" aria-label="Entrer les choix, séparés par des virgules">
-            <textarea id="choicesInput" placeholder="Tape tes choix, séparés par des virgules (ex: Pizza, Sushi, Tacos)"></textarea>
+          <div class="choices-container" aria-label="Entrer les choix dans des cases séparées">
+            <div class="choices-header">
+              <h3>Vos choix</h3>
+              <button type="button" class="add-choice-btn" id="addChoiceBtn" title="Ajouter un choix">
+                <svg width="16" height="16" viewBox="0 0 16 16">
+                  <path d="M8 0L8 16M0 8L16 8" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+                Ajouter
+              </button>
+            </div>
+            <div class="choices-list" id="choicesList">
+              <!-- Les cases de choix seront générées ici -->
+            </div>
           </div>
-          <div class="hint">2 à 8 choix. Probabilités égales. La roue s’adapte automatiquement.</div>
+          <div class="hint">2 à 8 choix maximum. Probabilités égales. La roue s'adapte automatiquement.</div>
 
           <div class="btn-row">
             <button class="btn btn-secondary" id="sampleBtn">Pré-remplir</button>
@@ -43,6 +66,6 @@
     </div>
   </div>
 
-  <script defer src="app.js"></script>
+  <script defer src="script.js"></script>
 </body>
 </html>
