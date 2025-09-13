@@ -78,6 +78,8 @@
     align-items: center; 
     justify-content: space-between; 
     gap: 16px;
+    min-width: 0; /* Permet au contenu de se rétrécir */
+    overflow: hidden;
   }
   .title{
     font-weight: 600;
@@ -87,6 +89,11 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   
   .mode-toggle{
@@ -100,6 +107,9 @@
     cursor: pointer;
     transition: all 0.2s ease;
     box-shadow: 0 1px 3px rgba(56, 83, 108, 0.3);
+    white-space: nowrap;
+    min-width: 0;
+    flex-shrink: 1;
   }
   .mode-toggle:hover {
     background: var(--c-primary-hover);
@@ -113,9 +123,11 @@
   
   .content{
     display: grid;
-    grid-template-columns: 1.1fr .9fr;
-    gap: 16px;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
     padding: 16px;
+    max-width: 100%;
+    overflow: hidden;
   }
   
   /* Mobile optimizations */
@@ -250,6 +262,8 @@
   
   .controls{
     padding: 16px 20px 24px;
+    min-width: 0; /* Permet au contenu de se rétrécir */
+    overflow: hidden;
   }
   
   @media (max-width: 768px) {
@@ -295,6 +309,8 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
   
   .add-choice-btn:hover {
@@ -313,6 +329,8 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    min-width: 0;
+    overflow: hidden;
   }
   
   .choice-item {
@@ -340,6 +358,8 @@
     font-size: 16px;
     font-family: inherit;
     padding: 0;
+    min-width: 0; /* Permet au texte de se rétrécir */
+    width: 100%;
   }
   
   .choice-item input::placeholder {
@@ -381,6 +401,25 @@
       justify-content: center;
       padding: 10px 16px;
       font-size: 16px;
+    }
+    
+    .choices-container {
+      margin: 8px 0;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .choices-container {
+      margin: 6px 0;
+    }
+    
+    .choices-header h3 {
+      font-size: 14px;
+    }
+    
+    .add-choice-btn {
+      padding: 8px 12px;
+      font-size: 14px;
     }
   }
   .hint{
