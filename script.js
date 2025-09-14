@@ -33,15 +33,16 @@ let spinning = false;
 // ====== Physics ======
 let angularVelocity = 0;  // radians per frame
 let angularAcceleration = 0;
-let friction = 0.982;     // friction coefficient - plus naturel
-let minVelocity = 0.0008; // minimum velocity before stopping - plus basse
-let maxVelocity = 0.8;    // maximum velocity - plus haute pour plus d'excitation
-let spinForce = 0.08;     // initial spin force - plus forte pour démarrage naturel
+let friction = 0.975;     // friction coefficient - plus de friction pour ralentissement
+let minVelocity = 0.001;  // minimum velocity before stopping
+let maxVelocity = 1.2;    // maximum velocity - très haute pour démarrage rapide
+let spinForce = 0.15;     // initial spin force - très forte pour démarrage explosif
 let targetSegment = -1;   // target segment index
 let isDecelerating = false;
 let decelerationPhase = false; // Track deceleration phase
-let minTurns = 4;         // Minimum number of full turns - plus réaliste
-let maxTurns = 8;         // Maximum number of full turns - plus réaliste
+let minTurns = 3;         // Minimum number of full turns - moins de tours
+let maxTurns = 6;         // Maximum number of full turns - moins de tours
+let initialSpeed = true;  // Track initial speed phase
 
 // ====== Responsive canvas ======
 function resizeCanvas(){
@@ -303,8 +304,8 @@ function updateChoices(){
   
   resultEl.textContent = '';
   
-  // Update layout for 6+ choices
-  if (choices.length >= 6) {
+  // Update layout for 5+ choices (4 in left column, rest in right column)
+  if (choices.length > 4) {
     choicesList.classList.add('two-columns');
   } else {
     choicesList.classList.remove('two-columns');
@@ -427,14 +428,18 @@ function spin(){
   // Normalize current rotation to prevent accumulation
   rotation = rotation % (Math.PI * 2);
   
-  // Apply very strong initial spin force for multiple turns
+  // Apply explosive initial spin force for very fast start
   const baseForce = spinForce;
-  const randomVariation = Math.random() * spinForce * 0.4; // 0 to 40% variation
-  angularVelocity = baseForce + randomVariation; // Very strong start for multiple turns
+  const randomVariation = Math.random() * spinForce * 0.3; // 0 to 30% variation
+  angularVelocity = baseForce + randomVariation; // Explosive start
   
   // Calculate target number of turns for suspense
   const targetTurns = minTurns + Math.random() * (maxTurns - minTurns);
   const targetRotation = targetTurns * Math.PI * 2; // Convert to radians
+  
+  // Reset phases
+  initialSpeed = true;
+  decelerationPhase = false;
   
   console.log('Starting velocity:', angularVelocity);
   console.log('Target turns:', targetTurns.toFixed(1));
@@ -457,25 +462,28 @@ function physicsLoop(){
   const totalRotation = Math.abs(rotation);
   const totalTurns = totalRotation / (Math.PI * 2);
   
-  // Apply natural progressive deceleration based on turns completed
-  if(!decelerationPhase) {
-    // Fast phase - maintain speed for multiple turns with natural variation
-    if(totalTurns < minTurns) {
-      // Keep high speed for minimum turns with slight natural variation
-      const naturalVariation = 0.998 + (Math.random() * 0.004 - 0.002);
-      angularVelocity *= naturalVariation;
-    } else if(totalTurns < minTurns + 1.5) {
-      // Start slowing down after minimum turns
-      angularVelocity *= 0.992; // Light friction
-    } else {
-      // Switch to deceleration phase
-      decelerationPhase = true;
-      console.log('Switching to deceleration phase after', totalTurns.toFixed(1), 'turns');
+  // Progressive deceleration system with explosive start
+  if(initialSpeed && totalTurns < 1) {
+    // Phase 1: Explosive start - maintain very high speed for first turn
+    angularVelocity *= 0.995; // Very light friction to maintain speed
+    if(totalTurns >= 1) {
+      initialSpeed = false;
+      console.log('Phase 1: Explosive start completed after', totalTurns.toFixed(1), 'turns');
     }
+  } else if(!decelerationPhase && totalTurns < minTurns) {
+    // Phase 2: Fast phase - gradual speed reduction
+    const speedReduction = 0.988 + (Math.random() * 0.004 - 0.002);
+    angularVelocity *= speedReduction;
+    if(totalTurns >= minTurns) {
+      decelerationPhase = true;
+      console.log('Phase 2: Fast phase completed, switching to deceleration after', totalTurns.toFixed(1), 'turns');
+    }
+  } else if(decelerationPhase && totalTurns < minTurns + 2) {
+    // Phase 3: Deceleration phase - more aggressive slowing
+    angularVelocity *= friction;
   } else {
-    // Slow phase - natural deceleration for final stop
-    const naturalFriction = friction + (Math.random() * 0.003 - 0.0015);
-    angularVelocity *= naturalFriction;
+    // Phase 4: Final stop - strong friction for precise stop
+    angularVelocity *= friction * 0.95; // Extra strong friction
   }
   
   // Update rotation
@@ -496,10 +504,18 @@ function physicsLoop(){
     const speed = Math.abs(angularVelocity);
     const intensity = Math.min(1, speed / maxVelocity);
     
-    // Add subtle blur effect for fast rotation
-    if(intensity > 0.3) {
-      canvas.style.filter = `blur(${intensity * 2}px)`;
+    // Add dramatic blur effect for very fast rotation
+    if(intensity > 0.7) {
+      // Explosive start - heavy blur
+      canvas.style.filter = `blur(${intensity * 4}px) brightness(1.1)`;
+    } else if(intensity > 0.4) {
+      // Fast phase - medium blur
+      canvas.style.filter = `blur(${intensity * 2.5}px)`;
+    } else if(intensity > 0.2) {
+      // Deceleration - light blur
+      canvas.style.filter = `blur(${intensity * 1}px)`;
     } else {
+      // Final phase - no blur
       canvas.style.filter = 'none';
     }
     
@@ -672,15 +688,17 @@ function playSpinSound(){
     // Longer duration for multiple turns (5-8 seconds)
     const soundDuration = 6 + Math.random() * 2; // 6-8 seconds
     
-    // Create a more realistic spinning sound
+    // Create an explosive spinning sound with dramatic start
     oscillator1.type = 'sawtooth';
-    oscillator1.frequency.setValueAtTime(150, audioContext.currentTime); // Higher frequency for fast spin
-    oscillator1.frequency.linearRampToValueAtTime(120, audioContext.currentTime + soundDuration * 0.3); // Maintain speed
-    oscillator1.frequency.exponentialRampToValueAtTime(25, audioContext.currentTime + soundDuration); // Slow down at end
+    oscillator1.frequency.setValueAtTime(400, audioContext.currentTime); // Explosive start - very high frequency
+    oscillator1.frequency.linearRampToValueAtTime(300, audioContext.currentTime + soundDuration * 0.2); // Maintain high speed
+    oscillator1.frequency.linearRampToValueAtTime(120, audioContext.currentTime + soundDuration * 0.5); // Gradual slowdown
+    oscillator1.frequency.exponentialRampToValueAtTime(25, audioContext.currentTime + soundDuration); // Final slow down
     
     oscillator2.type = 'triangle';
-    oscillator2.frequency.setValueAtTime(250, audioContext.currentTime); // Higher harmonic
-    oscillator2.frequency.linearRampToValueAtTime(200, audioContext.currentTime + soundDuration * 0.3);
+    oscillator2.frequency.setValueAtTime(600, audioContext.currentTime); // Very high harmonic for explosive start
+    oscillator2.frequency.linearRampToValueAtTime(450, audioContext.currentTime + soundDuration * 0.2);
+    oscillator2.frequency.linearRampToValueAtTime(200, audioContext.currentTime + soundDuration * 0.5);
     oscillator2.frequency.exponentialRampToValueAtTime(40, audioContext.currentTime + soundDuration);
     
     filterNode.type = 'lowpass';
@@ -690,9 +708,10 @@ function playSpinSound(){
     filterNode.Q.setValueAtTime(0.2, audioContext.currentTime);
     
     // Envelope that matches the multiple turns
-    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime); // Start loud
-    gainNode.gain.linearRampToValueAtTime(0.08, audioContext.currentTime + soundDuration * 0.2); // Stay loud
-    gainNode.gain.linearRampToValueAtTime(0.06, audioContext.currentTime + soundDuration * 0.7); // Maintain during turns
+    gainNode.gain.setValueAtTime(0.2, audioContext.currentTime); // Explosive start - very loud
+    gainNode.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + soundDuration * 0.1); // Quick fade from explosion
+    gainNode.gain.linearRampToValueAtTime(0.12, audioContext.currentTime + soundDuration * 0.3); // Maintain loud during fast phase
+    gainNode.gain.linearRampToValueAtTime(0.08, audioContext.currentTime + soundDuration * 0.7); // Gradual reduction
     gainNode.gain.exponentialRampToValueAtTime(0.005, audioContext.currentTime + soundDuration); // Fade out at end
     
     oscillator1.start(audioContext.currentTime);

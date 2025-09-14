@@ -383,6 +383,8 @@
   /* Choices container */
   .choices-container {
     margin: 12px 0;
+    max-width: 100%;
+    overflow: hidden;
   }
   
   .choices-header {
@@ -436,10 +438,27 @@
     overflow: hidden;
   }
   
-  /* Two columns when 6+ choices */
+  /* Two columns when 5+ choices - 4 in left column, rest in right column */
   .choices-list.two-columns {
     grid-template-columns: 1fr 1fr;
     gap: 8px 12px;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  /* Ensure proper order: first 4 items in left column, rest in right column */
+  .choices-list.two-columns .choice-item:nth-child(1),
+  .choices-list.two-columns .choice-item:nth-child(2),
+  .choices-list.two-columns .choice-item:nth-child(3),
+  .choices-list.two-columns .choice-item:nth-child(4) {
+    grid-column: 1;
+  }
+  
+  .choices-list.two-columns .choice-item:nth-child(5),
+  .choices-list.two-columns .choice-item:nth-child(6),
+  .choices-list.two-columns .choice-item:nth-child(7),
+  .choices-list.two-columns .choice-item:nth-child(8) {
+    grid-column: 2;
   }
   
   .choice-item {
@@ -451,6 +470,8 @@
     border-radius: var(--radius);
     padding: 12px 16px;
     transition: all 0.2s ease;
+    min-width: 0;
+    overflow: hidden;
   }
   
   .choice-item:focus-within {
@@ -480,14 +501,17 @@
     border: none;
     color: var(--c-tertiary-label);
     cursor: pointer;
-    padding: 4px;
+    padding: 6px;
     border-radius: 4px;
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 24px;
-    min-height: 24px;
+    min-width: 28px;
+    min-height: 28px;
+    font-size: 16px;
+    font-weight: bold;
+    flex-shrink: 0;
   }
   
   .remove-choice-btn:hover {
@@ -516,10 +540,15 @@
       margin: 8px 0;
     }
     
-    /* Single column on mobile even with 6+ choices */
+    /* Single column on mobile even with 5+ choices */
     .choices-list.two-columns {
       grid-template-columns: 1fr;
       gap: 8px;
+    }
+    
+    /* Reset grid-column on mobile for proper stacking */
+    .choices-list.two-columns .choice-item {
+      grid-column: unset !important;
     }
   }
   
@@ -541,6 +570,13 @@
     font-size: 13px;
     color: var(--c-secondary-label);
     margin: 8px 0 16px 0;
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
   }
   
   @media (max-width: 768px) {
@@ -738,6 +774,10 @@
   }
   
   .dark .choice-item input::placeholder {
+    color: var(--c-dark-tertiary-label);
+  }
+  
+  .dark .remove-choice-btn {
     color: var(--c-dark-tertiary-label);
   }
   
